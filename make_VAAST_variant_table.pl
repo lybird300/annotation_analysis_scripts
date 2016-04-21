@@ -2,6 +2,10 @@
 use strict;
 use warnings;
 
+# This file takes VAAST GVF output, pulls out variant
+# effect info for each position and outputs this in a 
+# table format.
+
 my $file = shift;
 open (FH, '<', $file) or die "Can't open $file:$!\n";
 
