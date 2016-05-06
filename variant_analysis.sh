@@ -28,4 +28,10 @@ awk -v OFS='\t' '{print $1,$4,$5}' NA12878_indelmapper.annotated.gvf > indels.be
 join -o 1.1,1.2,1.3,2.3 annovar_test.txt seattleseq_test.txt
 
 # Comparing more than 2 files ONLY by position
-join -t $'\t' -o 1.1,1.2,1.3,2.2,2.3 annovar_test.txt seattleseq_test.txt | join -t $'\t' -o 1.1,1.2,1.3,1.4,1.5,2.2,2.3 - snpeff_test.txt
+join -t $'\t' -o 1.1,1.2,1.3,2.2,2.3 annovar_test.txt seattleseq_test.txt | join -t $'\t' -o 1.1,1.2,1.3,1.4,1.5,2.2,2.3 - snpeff_test.txt | join -t $'\t' -o 1.1,1.2,1.3,1.4,1.5,1.6,1.7,2.2,2.3 - vep_variants.txt
+
+# Look at the different types of transcripts IDs
+perl all_IDs.pl vep_variants.txt | sort | uniq -c | less -S
+
+# Print out all lines of a specific chromosome from variant table
+grep -v "^Position" vep.txt | awk '$1 ~ /^19/ {print $0}' > vep_chr19.txt
