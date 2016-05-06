@@ -1,58 +1,15 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Getopt::Long;
 use Scalar::MoreUtils qw(empty);
 
-=cut
+# This works for VAT only because there are Ensembl IDs
+# TODO: Get make_variant_table.pl to process this type of output. 
 
-# This works for VAAST, snpEff (GVF), SeattleSeq (GVF)
-# TODO: Get this to work later. Also include an option to print 
-# tables by chromosome.
-
-my $usage = "
-
-Synopsis:
-
-perl make_variant_table.pl --file file.gvf --tool VAAST
-
-Description:
-
-This script takes a file with variant annotation data in GVF, 
-pulls out variant effect info for each position and outputs 
-this in a table format.
-
-Options:
-
-  --file
-    Annotated GVF file
-
-  --tool
-    Name of annotation tool that created the file
-
-";
-
-my ($help, $file, $tool);
-
-my $opt_success = GetOptions("help|h" => \$help,
-	   "file|f=s" => \$file,
-           "tool|t=s" => \$tool);
-die $usage unless $opt_success;
-if ($help) {
-  print $usage;
-  exit(0);
-}
-
-=cut
-
-my ($file, $tool);
-GetOptions('file=s' => \$file, 
-	   'tool=s' => \$tool)
-or die("Error in command line arguments\n");
-
+my $file = shift;
 open (my $fh, '<', $file) or die "ERROR: A file is required: $!";
 
-print "Position\tTranscript_ID\t$tool\n";
+print "Position\tTranscript_ID\tVAT\n";
 
 while (<$fh>) {
   chomp $_;
@@ -94,11 +51,11 @@ while (<$fh>) {
         #shift @ann for 1..3;
         shift @ann for 0..2;
         foreach (@ann) {
-          if ($_ =~ /[NMRXP]{2}_/) {
+          #if ($_ =~ /[NMRXP]{2}_/) {
           # Need to account for multiple transcripts IDs
           # I also don't want to print out duplicate IDs
             $transcripts{$_}++;
-          }
+          #}
         }
       }
     }
