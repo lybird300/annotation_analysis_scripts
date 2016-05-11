@@ -54,6 +54,8 @@ open (my $fh, '<', $file) or die "ERROR: A file is required: $!";
 
 print "Position\tTranscript_ID\t$tool\n";
 
+#my %positions;
+
 while (<$fh>) {
   chomp $_;
   if ($_ =~ '^#') {
@@ -63,6 +65,21 @@ while (<$fh>) {
       $phase, $attributes) = split(/\t/, $_);
   my @attributes = split(';', $attributes);
   my $pos = $chr.':'.$start.':'.$end;
+
+=cut
+
+  # Check if I have seen this position
+  # If I have, I want to combine the transcript IDs and effects
+  # and print out the position 1 time with all annotations
+  if (exists $positions{$pos}) {
+    
+  }
+  else {
+    $positions{$pos}++;
+  }
+
+=cut
+
   my @effects;
   my %transcripts;
   my $all_effects;
