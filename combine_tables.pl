@@ -4,7 +4,9 @@ use warnings;
 
 # This script combines all of the variant tables into 1 file with 
 # all variants that are annotated by all tools
-
+# I checked this script because some of the columns were switched in one of the tables
+# when I imported it into mysql. The transcript IDs were in the effect column and 
+# effects were in the transcript ID column for some of the tools.
 print "Position\tAnnovar_Transcript_ID\tAnnovar\tSeattleseq_Transcript_ID\t",
       "Seattleseq\tsnpEff_Transcript_ID\tsnpEff\tVAAST_Transcript_ID\tVAAST",
       "\tVEP_Transcript_ID\tVEP\n";

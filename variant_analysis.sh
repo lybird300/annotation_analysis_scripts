@@ -35,3 +35,17 @@ perl all_IDs.pl vep_variants.txt | sort | uniq -c | less -S
 
 # Print out all lines of a specific chromosome from variant table
 grep -v "^Position" vep.txt | awk '$1 ~ /^19/ {print $0}' > vep_chr19.txt
+
+# Print out all unique terms from ANNOVAR variant table before the terms 
+# have been mapped. It is different because ANNOVAR terms have whitespaces.
+grep -v "^Position" annovar_variants.txt | cut -f 3- | sort | uniq -c | less
+
+# Reformat files to input them into database
+awk '$2="ANNOVAR"' annovar_chr19.txt > reformatted_annovar_chr19.txt
+cat reformatted_annovar_chr19.txt reformatted_seattleseq_chr19.txt reformatted_snpeff_chr19.txt reformatted_vaast_chr19.txt reformatted_vep_chr19.txt > chr19_all_reformatted.txt
+
+# Sort ANNOVAR table_annovar.annovar_multianno.txt file
+(head -n 1 NA12878_table_annovar.annovar_multianno.txt && tail -n +2 NA12878_table_annovar.annovar_multianno.txt | sort -k 1,1n -k 2,2n -k 3,3n) > sorted_NA12878_table_annovar.annovar_multianno.txt
+
+# Remove lines in inconsistent_lines.txt from main file
+sort inconsistent_lines.txt sorted_NA12878_table_annovar.annovar_multianno.txt | uniq -u

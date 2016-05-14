@@ -4,8 +4,6 @@ use warnings;
 
 # This script maps ANNOVAR terms to SO.
 
-=cut
-
 my %SO_terms = (
     'frameshift insertion' => 'frameshift_elongation',
     'frameshift deletion' => 'frameshift_truncation',
@@ -42,6 +40,12 @@ my %SO_terms = (
 
 =cut
 
+my %combo_terms = ( 
+  'downstream_gene_variant;upstream_gene_variant' => 'intergenic_1kb_variant',
+  '5_prime_UTR_variant;3_prime_UTR_variant' => 'gene_variant',
+  'exonic;splice_region_variant' => 'exonic_splice_region_variant',
+  );
+
 my %SO_terms = (
     'frameshift insertion' => 'frameshift_elongation',
     'frameshift deletion' => 'frameshift_truncation',
@@ -53,6 +57,8 @@ my %SO_terms = (
     'stopgain' => 'stop_gained',
     'stoploss' => 'stop_lost',
     );
+
+=cut
 
 print "Position\tANNOVAR_Transcript_ID\tANNOVAR\n";
 my $file = shift;
