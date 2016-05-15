@@ -53,3 +53,6 @@ sort inconsistent_lines.txt sorted_NA12878_table_annovar.annovar_multianno.txt |
 # Merge variant tables with join which will only print positions that are 
 # annotated by all tools
 perl ../../annotation_analysis_scripts/combine_tables.pl > chr19_variants_matched_positions_all_tools.txt
+
+# Remove period and trailing numbers from ensembl IDs
+awk '{sub(/\.[0-9]/,""); print}'
