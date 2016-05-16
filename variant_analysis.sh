@@ -62,3 +62,13 @@ awk -F, '{$(NF+1)="Seattleseq";}1' OFS='\t' seattleseq.txt > out
 
 # Split up chr, start, end into separate columns
 perl split_position.pl out > reformatted_seattleseq.txt
+
+# Get count of number of unique variants from GVF file
+grep -v "^#" NA12878_Y_removed.gvf | awk -v OFS='\t' '{print $1,$4,$5}' | sort | uniq -c | sort -rn | less -SN
+
+# Get count of number of unique variant from VCF file
+grep -v "^#" NA12878-NGv3-LAB1360-A.snp-indel_merged.final.Y_chr_removed.vcf | awk -v OFS='\t' '{print $1,$2}' | sort | uniq -c | sort -rn | less -SN
+
+# Look at the differences between the unique variant positions in the 
+# VCF and GVF files
+diff -u unique_vcf.txt unique_gvf.txt | awk '$1~/-/ || /+/ {print $0}' > differences_between_vcf_gvf.txt
