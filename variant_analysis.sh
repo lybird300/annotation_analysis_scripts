@@ -56,3 +56,9 @@ perl ../../annotation_analysis_scripts/combine_tables.pl > chr19_variants_matche
 
 # Remove period and trailing numbers from ensembl IDs
 awk '{sub(/\.[0-9]/,""); print}'
+
+# Add 4th column to variant table files that includes the name of the tool
+awk -F, '{$(NF+1)="Seattleseq";}1' OFS='\t' seattleseq.txt > out
+
+# Split up chr, start, end into separate columns
+perl split_position.pl out > reformatted_seattleseq.txt

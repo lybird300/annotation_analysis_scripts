@@ -22,13 +22,17 @@ while (<$fh>) {
   # You have to actually split these and add them to the hash
   # If not, you will lose data
   my @all_ids = split(';', $cols[1]);
-  foreach (@all_ids) { 
-    push (@{$positions{$pos}{'ids'}}, $_); 
+  foreach (@all_ids) {
+    if ($_ ne '.') { 
+      push (@{$positions{$pos}{'ids'}}, $_); 
+    }
   }
   
   my @all_effects = split(';', $cols[2]);
   foreach (@all_effects) {
-    push (@{$positions{$pos}{'effects'}}, $_);
+    if ($_ ne '.') {
+      push (@{$positions{$pos}{'effects'}}, $_);
+    }
   }
 } 
 
