@@ -72,3 +72,12 @@ grep -v "^#" NA12878-NGv3-LAB1360-A.snp-indel_merged.final.Y_chr_removed.vcf | a
 # Look at the differences between the unique variant positions in the 
 # VCF and GVF files
 diff -u unique_vcf.txt unique_gvf.txt | awk '$1~/-/ || /+/ {print $0}' > differences_between_vcf_gvf.txt
+
+# Count the total number of unique positions called by at least 1 tool
+# This number is slightly different than adding up all of the unique 
+# positions from each tool because some variants may not be annotated by
+# all tools or the position will be off by 1 or more bases.
+grep -v "^chr" number_of_tools_annotate_each_position.txt | awk -v OFS='\t' '{print $1,$2,$3}' | sort | uniq -c | sort -rn | wc -l
+
+# Breakdown of number of positions called by 1,2,3,4,5 or all 6 tools
+grep -v "^chr" number_of_tools_annotate_each_position.txt | awk '{print $4}' | sort | uniq -c | sort -rn

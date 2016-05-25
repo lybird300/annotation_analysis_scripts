@@ -2,18 +2,9 @@
 use strict;
 use warnings;
 
-=cut
+# Combines processed VAT files into 1 variant table file
 
-my $snps = 'mapped_vat_snp_variants.txt';
-my $SVs = 'mapped_vat_SV_variants.txt';
-my $indels = 'mapped_vat_indel_variants_substitution_removed.txt';
-open (my $fh_snp, '<', $snps) or die "Can't open $snps $!\n";
-open (my $fh_SV, '<', $SVs) or die "Can't open $SVs $!\n";
-open (my $fh_indel, '<', $indels) or die "Can't open $indels $!\n";
-
-=cut
-
-my @files = qw(mapped_vat_snp_variants.txt mapped_vat_indel_variants_substitution_removed.txt mapped_vat_SV_variants.txt);
+my @files = qw(mapped_vat_snp_variants.txt mapped_vat_indel_variants.txt mapped_vat_SV_variants.txt);
 
 my %vat;
 

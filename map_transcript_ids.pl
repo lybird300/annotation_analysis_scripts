@@ -36,6 +36,8 @@ while(<$fh2>) {
   }
   my ($pos, $id, $ann) = split('\t', $_);
   my @mapped_ids;
+  # If you remove the decimal and trailing number before running this
+  # it won't work the right way.
   $id =~ /(ENST[\d]*)./; 
   if (exists $ensembl_ids{$1}) {
     if (@{$ensembl_ids{$1}{'refseq'}} > 1) {
