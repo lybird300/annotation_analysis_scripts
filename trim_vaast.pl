@@ -8,38 +8,39 @@ use List::UtilsBy qw(max_by);
 #    when it appears in the file.
 # 2. I want to reduce the number of effects listed only to the most
 #    specific in the VAAST column.
+# I'm reducing effects not taking transcripts into account.
 
-#my $file = '../table_files/vaast.txt';
 my $file = shift;
 open (my $fh, '<', $file) or die "Can't open $file. $!";
 
 my %terms = (
-  'sequence_variant' => 1,
-  'gene_variant' => 2,
-  'transcript_variant' => 3,
-  'exon_variant' => 4,
-  'intron_variant' => 4,
+  'sequence_variant'        => 1,
+  'gene_variant'            => 2,
+  'transcript_variant'      => 3,
+  'exon_variant'            => 4,
+  'intron_variant'          => 4,
   'coding_sequence_variant' => 5,
-  'splice_region_variant' => 5,
-  '3_prime_UTR_variant' => 6,
-  '5_prime_UTR_variant' => 6,
-  'synonymous_variant' => 6,
+  'splice_region_variant'   => 5,
+  '3_prime_UTR_variant'     => 6,
+  '5_prime_UTR_variant'     => 6,
+  'synonymous_variant'      => 6,
   'splice_acceptor_variant' => 6,
-  'splice_donor_variant' => 6,
-  'stop_retained_variant' => 7,
-  'inframe_variant' => 7,
-  'frameshift_variant' => 7,
-  'missense_variant' => 8,
-  'stop_gained' => 8,
-  'stop_lost' => 8,
+  'splice_donor_variant'    => 6,
+  'stop_retained_variant'   => 7,
+  'inframe_variant'         => 7,
+  'frameshift_variant'      => 7,
+  'missense_variant'        => 8,
+  'stop_gained'             => 8,
+  'stop_lost'               => 8,
 );
 
 while (<$fh>) {
 
   chomp $_;
   my ($chr, $start, $end, $ids, $terms, $tool) = split('\t', $_);
-  # Need to account for positions where there is no term
-  if ($terms eq '.') {
+  # Need to account for positions where there is no term or 
+  # where there is already 1 term for that line
+  if (($terms eq '.') || ($terms !~ /;/)) {
     print "$_\n";
     next;
   }
@@ -52,10 +53,37 @@ while (<$fh>) {
         $comparison{$_} = $terms{$_};
       } 
     }
-    # Get the term lowest in the ontology 
-    my $highest = max_by { $comparison{$_} } keys %comparison;
-    print "$chr\t$start\t$end\t$ids\t$highest\t$tool\n";
+
+    # What if a line has 2 or more terms with equal rank and highest?
+    # Input: exon_variant;gene_variant;transcript_variant;intron_variant
+    # Output: exon_variant
+    # Correct output: exon_variant;intron_variant 
+    # If 2 terms are the lowest rank and the same, print both terms
+    # Process these lines differently than List::UtilsBy max_by method
+    my @values = values(%comparison);
+    my @sorted_values = sort { $b <=> $a } @values;
+
+    # Compare first 2 elements of array
+    # If equal, this means that there are 2 or more terms
+    # with the highest value (lowest from all the terms in SO)
+    if ($sorted_values[0] == $sorted_values[1]) {
+      # Only print terms with highest value
+      my @lowest_terms;
+      foreach my $key (keys %comparison) {
+        if ($comparison{$key} == $sorted_values[0]) {
+          push (@lowest_terms, $key); 
+        }
+      }
+      my $trim_terms = join ';', @lowest_terms;
+      print "$chr\t$start\t$end\t$ids\t$trim_terms\t$tool\n";
+    } 
+    else {
+      # Use max_by to get the 1 term lowest in the ontology
+      my $highest = max_by { $comparison{$_} } keys %comparison;
+      print "$chr\t$start\t$end\t$ids\t$highest\t$tool\n";
+    }
   }
+
 }
 close $fh;
 
