@@ -29,8 +29,17 @@ foreach my $pos (keys %variants) {
   }
 }
 
+foreach my $effect (keys %unique) {
+  print "$effect\t$unique{$effect}\n";
+}
+
+=cut
+
 my @unique_effects = keys %unique;
 foreach (@unique_effects) {
   print "$_\n";
 }
+
+=cut
+
 close $fh;
