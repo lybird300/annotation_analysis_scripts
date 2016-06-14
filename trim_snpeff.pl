@@ -116,7 +116,7 @@ while (<$fh>) {
       } 
     }
     my @values = values(%comparison);
-    my @sorted_values = sort { $b <=> $a } @values;
+    my @sorted_values = sort { $a <=> $b } @values;
     if ($sorted_values[0] == $sorted_values[1]) {
       my @lowest_terms;
       foreach my $key (keys %comparison) {
