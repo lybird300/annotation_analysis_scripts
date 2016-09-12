@@ -12,7 +12,7 @@ use DBD::mysql;
 my $db = 'variant_annotation_analysis';
 my $host = 'localhost';
 my $user = 'root';
-my $password = 'BMI!Utah26';
+my $password = '';
 
 #connect to MySQL database
 my $dbh = DBI->connect("DBI:mysql:database=$db:host=$host", $user, $password) or die "Can't connect to database: $DBI::errstr\n";

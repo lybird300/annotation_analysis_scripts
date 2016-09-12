@@ -21,7 +21,7 @@ use DBD::mysql;
 my $db = 'variant_annotation_analysis';
 my $host = 'localhost';
 my $user = 'root';
-my $password = 'BMI!Utah26';
+my $password = '';
 
 my $file = "all_tools_transcripts.txt";
 open (my $fh, "<", $file) or die "Can't open $file $!\n";
